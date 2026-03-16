@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>華夏玻璃｜緊急策略簡報｜荷莫茲危機版 2026Q1</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --primary: #0a1628;
+    --accent: #c8292a;
+    --accent2: #e8b84b;
+    --blue: #1a4080;
+    --lightblue: #2d6ab0;
+    --green: #1a7a4a;
+    --text: #f0f4ff;
+    --muted: #a0b0c8;
+    --card: rgba(255,255,255,0.06);
+    --border: rgba(255,255,255,0.12);
+  }
+
+  body {
+    font-family: 'Segoe UI', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+    background: var(--primary);
+    color: var(--text);
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── SLIDE CONTAINER ── */
+  .slides-wrapper {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .slide {
+    position: absolute;
+    inset: 0;
+    padding: 48px 64px;
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .slide.active { display: flex; }
+
+  /* ── NAVIGATION BAR ── */
+  .nav-bar {
+    background: rgba(10,22,40,0.95);
+    border-top: 1px solid var(--border);
+    padding: 10px 32px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-shrink: 0;
+  }
+  .nav-btn {
+    background: var(--blue);
+    color: #fff;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-family: inherit;
+    transition: background 0.2s;
+  }
+  .nav-btn:hover { background: var(--lightblue); }
+  .nav-btn:disabled { background: #333; color: #666; cursor: default; }
+  .slide-counter {
+    color: var(--muted);
+    font-size: 13px;
+    min-width: 80px;
+    text-align: center;
+  }
+  .progress-bar {
+    flex: 1;
+    height: 4px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--accent2);
+    border-radius: 2px;
+    transition: width 0.3s ease;
+  }
+  .slide-dots {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    max-width: 400px;
+  }
+  .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.2);
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .dot.active { background: var(--accent2); }
+  .dot:hover { background: rgba(255,255,255,0.5); }
+
+  /* ── TYPOGRAPHY ── */
+  .slide-title {
+    font-size: 36px;
+    font-weight: 700;
+    line-height: 1.25;
+    margin-bottom: 8px;
+  }
+  .slide-subtitle {
+    font-size: 18px;
+    color: var(--muted);
+    margin-bottom: 32px;
+  }
+  .section-tag {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 2px;
+    margin-bottom: 14px;
+  }
+  .section-tag.yellow { background: var(--accent2); color: #1a1a1a; }
+  .section-tag.blue { background: var(--lightblue); }
+  .section-tag.green { background: var(--green); }
+
+  h2.header {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 24px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--accent);
+  }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px 24px;
+  }
+  .card.red-accent { border-left: 4px solid var(--accent); }
+  .card.yellow-accent { border-left: 4px solid var(--accent2); }
+  .card.blue-accent { border-left: 4px solid var(--lightblue); }
+  .card.green-accent { border-left: 4px solid #2ecc71; }
+
+  /* ── GRID LAYOUTS ── */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; }
+
+  /* ── TABLE ── */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13.5px;
+  }
+  th {
+    background: rgba(26,64,128,0.7);
+    color: var(--accent2);
+    padding: 10px 14px;
+    text-align: left;
+    font-weight: 600;
+    border-bottom: 2px solid var(--lightblue);
+  }
+  td {
+    padding: 9px 14px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    line-height: 1.5;
+  }
+  tr:nth-child(even) td { background: rgba(255,255,255,0.03); }
+
+  /* ── LIST ── */
+  ul.dot-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  ul.dot-list li { display: flex; gap: 10px; line-height: 1.6; font-size: 15px; }
+  ul.dot-list li::before { content: "▸"; color: var(--accent2); flex-shrink: 0; margin-top: 1px; }
+
+  /* ── BADGE ── */
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .badge.red { background: var(--accent); }
+  .badge.yellow { background: var(--accent2); color: #1a1a1a; }
+  .badge.green { background: var(--green); }
+  .badge.blue { background: var(--lightblue); }
+
+  /* ── DO / DON'T ── */
+  .do-dont { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .do-box { background: rgba(26,122,74,0.18); border: 1px solid rgba(46,204,113,0.35); border-radius: 8px; padding: 16px 20px; }
+  .dont-box { background: rgba(200,41,42,0.15); border: 1px solid rgba(200,41,42,0.35); border-radius: 8px; padding: 16px 20px; }
+  .box-header { font-size: 13px; font-weight: 700; letter-spacing: 1px; margin-bottom: 12px; }
+  .do-box .box-header { color: #2ecc71; }
+  .dont-box .box-header { color: #e74c3c; }
+  .do-box li::before { color: #2ecc71 !important; }
+  .dont-box li::before { color: #e74c3c !important; }
+
+  /* ── FLOW ARROWS ── */
+  .flow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    flex-wrap: wrap;
+  }
+  .flow-item {
+    background: rgba(26,64,128,0.5);
+    border: 1px solid var(--lightblue);
+    border-radius: 6px;
+    padding: 8px 14px;
+    text-align: center;
+    line-height: 1.4;
+  }
+  .flow-arrow { color: var(--accent2); font-size: 20px; flex-shrink: 0; }
+
+  /* ── PILLAR ── */
+  .pillar {
+    background: linear-gradient(135deg, rgba(26,64,128,0.4), rgba(45,106,176,0.2));
+    border: 1px solid var(--lightblue);
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+  }
+  .pillar-num {
+    font-size: 36px;
+    font-weight: 800;
+    color: var(--accent2);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .pillar-title { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+  .pillar-body { font-size: 13px; color: #b0c4de; line-height: 1.6; }
+
+  /* ── KPI ── */
+  .kpi-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    text-align: center;
+  }
+  .kpi-label { font-size: 12px; color: var(--muted); margin-bottom: 6px; }
+  .kpi-value { font-size: 28px; font-weight: 800; color: var(--accent2); }
+  .kpi-sub { font-size: 12px; color: var(--muted); margin-top: 4px; }
+
+  /* ── TIMELINE TABLE ── */
+  .timeline-date { color: var(--accent2); font-weight: 700; white-space: nowrap; }
+
+  /* ── QUOTE BOX ── */
+  .quote-box {
+    background: linear-gradient(135deg, rgba(26,64,128,0.4), rgba(10,22,40,0.8));
+    border: 1px solid var(--lightblue);
+    border-radius: 8px;
+    padding: 28px 36px;
+    text-align: center;
+    font-size: 18px;
+    line-height: 1.8;
+    font-style: italic;
+    color: #d0e8ff;
+  }
+
+  /* ── SLIDE 1 (TITLE) ── */
+  .title-slide {
+    background:
+      radial-gradient(ellipse at 20% 50%, rgba(200,41,42,0.15) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 20%, rgba(26,64,128,0.4) 0%, transparent 50%),
+      linear-gradient(135deg, #0a1628 0%, #0f2040 100%);
+    justify-content: center;
+    align-items: flex-start;
+  }
+  .alert-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--accent);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 6px 16px;
+    border-radius: 4px;
+    margin-bottom: 32px;
+    letter-spacing: 1px;
+  }
+  .title-main { font-size: 52px; font-weight: 900; line-height: 1.15; margin-bottom: 12px; }
+  .title-company { font-size: 22px; color: var(--accent2); font-weight: 600; margin-bottom: 8px; }
+  .title-desc { font-size: 18px; color: var(--muted); max-width: 640px; margin-bottom: 40px; line-height: 1.6; }
+  .title-meta {
+    display: flex;
+    gap: 32px;
+    align-items: center;
+  }
+  .meta-item { font-size: 14px; color: var(--muted); }
+  .meta-item strong { color: #fff; display: block; font-size: 16px; }
+  .title-divider { width: 1px; height: 40px; background: var(--border); }
+
+  /* ── SCROLLABLE CONTENT ── */
+  .scroll-content {
+    overflow-y: auto;
+    flex: 1;
+    padding-right: 8px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+  .scroll-content::-webkit-scrollbar { width: 4px; }
+  .scroll-content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  /* ── ROADMAP ── */
+  .roadmap-row {
+    display: grid;
+    grid-template-columns: 120px 1fr 120px 160px;
+    gap: 12px;
+    align-items: start;
+    margin-bottom: 12px;
+  }
+  .roadmap-phase {
+    background: rgba(26,64,128,0.5);
+    border: 1px solid var(--lightblue);
+    border-radius: 6px;
+    padding: 8px 12px;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--accent2);
+  }
+  .roadmap-actions { font-size: 13px; line-height: 1.7; color: #c0d8f0; }
+  .roadmap-owner { font-size: 12px; color: var(--muted); line-height: 1.6; }
+  .roadmap-kpi { font-size: 12px; color: #2ecc71; line-height: 1.6; }
+</style>
+</head>
+<body>
+
+<div class="slides-wrapper">
+
+  <!-- ══ SLIDE 1: TITLE ══ -->
+  <div class="slide title-slide active" id="slide-1">
+    <div class="alert-badge">⚠ 緊急情勢簡報 ⚠ 機密文件</div>
+    <div class="title-company">華夏玻璃｜業務策略會議</div>
+    <div class="title-main">荷莫茲海峽危機<br><span style="color:var(--accent)">緊急應對策略</span></div>
+    <div class="title-desc">
+      荷莫茲危機 × 土耳其 Şişecam 停供 × 華夏的戰略機會視窗
+    </div>
+    <div class="title-meta">
+      <div class="meta-item"><strong>日期</strong>2026 年 3 月 17 日</div>
+      <div class="title-divider"></div>
+      <div class="meta-item"><strong>性質</strong>機密・僅供內部使用</div>
+      <div class="title-divider"></div>
+      <div class="meta-item"><strong>版本</strong>2026Q1 危機版</div>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 2: CRISIS SUMMARY ══ -->
+  <div class="slide" id="slide-2">
+    <div class="section-tag">🚨 情勢概要</div>
+    <h2 class="header">這不是未來風險，這是正在發生的危機</h2>
+    <div class="scroll-content">
+      <div class="card red-accent" style="margin-bottom:20px; font-size:15px; line-height:1.7;">
+        <strong style="color:var(--accent2);">核心事件：</strong>
+        2026 年 2 月 28 日，美以軍事打擊伊朗後，伊朗宣布<strong>封閉荷莫茲海峽</strong>。
+        這個全球最重要的能源咽喉一旦阻斷，產生以下直接後果：
+      </div>
+      <div class="grid-3" style="margin-bottom:20px;">
+        <div class="card yellow-accent" style="text-align:center;">
+          <div style="font-size:36px; font-weight:800; color:var(--accent);">+63%</div>
+          <div style="font-size:14px; margin-top:6px;">歐洲天然氣價格暴漲</div>
+          <div style="font-size:12px; color:var(--muted); margin-top:4px;">玻璃熔窯能源成本翻倍</div>
+        </div>
+        <div class="card yellow-accent" style="text-align:center;">
+          <div style="font-size:36px; font-weight:800; color:var(--accent2);">停產</div>
+          <div style="font-size:14px; margin-top:6px;">土耳其 Şişecam 部分停產</div>
+          <div style="font-size:12px; color:var(--muted); margin-top:4px;">歐洲玻璃容器供應出現大規模缺口</div>
+        </div>
+        <div class="card green-accent" style="text-align:center;">
+          <div style="font-size:36px; font-weight:800; color:#2ecc71;">低衝擊</div>
+          <div style="font-size:14px; margin-top:6px;">台灣能源不受荷莫茲影響</div>
+          <div style="font-size:12px; color:var(--muted); margin-top:4px;">澳洲、美國 LNG，能源成本遠低於歐洲</div>
+        </div>
+      </div>
+      <div class="card" style="background:linear-gradient(135deg,rgba(200,41,42,0.2),rgba(232,184,75,0.1)); border-color:var(--accent); padding:24px;">
+        <div style="font-size:13px; color:var(--accent2); font-weight:700; margin-bottom:8px;">▌ 核心結論</div>
+        <div style="font-size:16px; line-height:1.8; font-weight:500;">
+          這是華夏玻璃近年來<strong style="color:var(--accent2);">最大的策略機會窗口</strong>。業務團隊必須在<strong style="color:var(--accent);">本週內啟動緊急行動</strong>，否則機會將由其他亞洲競爭者搶佔。
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 3: TIMELINE ══ -->
+  <div class="slide" id="slide-3">
+    <div class="section-tag">一、情勢認知</div>
+    <h2 class="header">危機時間軸（2026 年 2 月底至今）</h2>
+    <div class="scroll-content">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:110px;">日期</th>
+            <th>事件</th>
+            <th>能源市場反應</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="timeline-date">2026.02.28</td>
+            <td>美國 &amp; 以色列對伊朗發動聯合軍事打擊，伊朗最高領袖哈梅內伊遭擊斃</td>
+            <td>油價跳漲 <strong style="color:var(--accent);">+10–13%</strong>，布倫特原油突破 $100/桶</td>
+          </tr>
+          <tr>
+            <td class="timeline-date">2026.03.01</td>
+            <td>伊朗革命衛隊宣布<strong>封閉荷莫茲海峽</strong>，停止一切商船通行</td>
+            <td>LNG 現貨：歐洲 <strong style="color:var(--accent);">+63%</strong>，亞洲 +54%</td>
+          </tr>
+          <tr>
+            <td class="timeline-date">2026.03.02</td>
+            <td>卡達（全球最大 LNG 出口國）遭無人機攻擊，暫停 LNG 出口</td>
+            <td>歐洲天然氣期貨 €46 → 峰值 <strong style="color:var(--accent);">€60+/MWh</strong></td>
+          </tr>
+          <tr>
+            <td class="timeline-date">2026.03.03</td>
+            <td>逾 150 艘油輪錨泊等待，通行量降至近零</td>
+            <td>布倫特原油峰值 <strong style="color:var(--accent);">$126/桶</strong>，創 4 年新高</td>
+          </tr>
+          <tr>
+            <td class="timeline-date">2026.03.10</td>
+            <td>土耳其 Şişecam 等能源密集型製造業宣布<strong>減產或停產</strong>部分產線</td>
+            <td>歐洲製造業用氣配給制開始實施</td>
+          </tr>
+          <tr>
+            <td class="timeline-date" style="color:var(--accent);">2026.03.15<br><span style="font-size:11px;">(今日)</span></td>
+            <td>新伊朗最高領袖宣稱將持續管控海峽，<strong style="color:var(--accent);">無明確解封時間表</strong></td>
+            <td>市場持續高波動，油價區間 $100–$126/桶</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 4: INDUSTRY IMPACT ══ -->
+  <div class="slide" id="slide-4">
+    <div class="section-tag">1.2 產業衝擊</div>
+    <h2 class="header">為什麼玻璃容器產業受衝擊特別深？</h2>
+    <div class="scroll-content">
+      <div class="card" style="margin-bottom:20px; font-size:15px; line-height:1.7;">
+        玻璃製造是全球製造業中<strong style="color:var(--accent2);">能源密集度最高</strong>的行業之一。
+        熔窯需要連續燃燒天然氣維持 <strong>1,500°C 以上</strong>的溫度，
+        能源成本佔製造總成本約 <strong style="color:var(--accent);">25–35%</strong>。
+      </div>
+      <div style="margin-bottom:20px;">
+        <div style="font-size:14px; color:var(--muted); margin-bottom:12px;">荷莫茲封閉 → 能源衝擊 → 玻璃業的連鎖反應：</div>
+        <div class="flow">
+          <div class="flow-item"><strong style="color:var(--accent);">第一衝擊</strong><br>LNG 供應中斷<br>歐洲天然氣 +63%</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-item" style="border-color:var(--accent);">玻璃熔窯<br>能源成本翻倍</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-item"><strong style="color:var(--accent);">第二衝擊</strong><br>Şişecam 停產<br>蘇打灰價格上漲</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-item" style="border-color:var(--accent);">原料成本<br>雙重打擊</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-item" style="border-color:#2ecc71;"><strong style="color:#2ecc71;">機會面</strong><br>歐洲供應缺口<br>亞洲供應商崛起</div>
+        </div>
+      </div>
+      <div class="grid-3">
+        <div class="card red-accent">
+          <div style="font-size:12px; color:var(--accent); font-weight:700; margin-bottom:8px;">⚡ 能源面</div>
+          <ul class="dot-list">
+            <li>歐洲廠商被迫減產、停產</li>
+            <li>固定熔窯無法快速關閉再啟動</li>
+            <li>能源成本轉嫁給採購商</li>
+          </ul>
+        </div>
+        <div class="card yellow-accent">
+          <div style="font-size:12px; color:var(--accent2); font-weight:700; margin-bottom:8px;">📦 原料面</div>
+          <ul class="dot-list">
+            <li>蘇打灰全球價格上漲</li>
+            <li>Şişecam 同為全球前 3 大蘇打灰生產商</li>
+            <li>影響所有玻璃廠原料供應</li>
+          </ul>
+        </div>
+        <div class="card green-accent">
+          <div style="font-size:12px; color:#2ecc71; font-weight:700; margin-bottom:8px;">🎯 機會面（台灣）</div>
+          <ul class="dot-list">
+            <li>台灣 LNG 來自澳洲、美國</li>
+            <li>不依賴荷莫茲航線</li>
+            <li>能源成本優勢相對明顯</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 5: SISECAM ══ -->
+  <div class="slide" id="slide-5">
+    <div class="section-tag">1.3 Şişecam 停供</div>
+    <h2 class="header">Şişecam 停供的規模意義</h2>
+    <div class="scroll-content">
+      <div class="card" style="margin-bottom:20px; font-size:15px; line-height:1.7;">
+        土耳其 Şişecam 的停供，對歐洲市場的意義等同於<strong style="color:var(--accent2);">「撤走一個核心支柱」</strong>：
+      </div>
+      <table style="margin-bottom:20px;">
+        <thead>
+          <tr><th>Şişecam 的市場地位</th><th>數字規模</th><th>對歐洲市場的意義</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>歐洲最大平板玻璃製造商</td>
+            <td><strong style="color:var(--accent);">歐洲 #1</strong></td>
+            <td>歐洲玻璃包裝供應鏈最大單一節點之一</td>
+          </tr>
+          <tr>
+            <td>全球玻璃容器前 5 大</td>
+            <td><strong style="color:var(--accent2);">年產 560 萬噸玻璃</strong></td>
+            <td>土耳其境內玻璃包裝產能 120 萬噸/年全線停擺</td>
+          </tr>
+          <tr>
+            <td>全球蘇打灰前 3 大</td>
+            <td><strong style="color:var(--accent2);">年產蘇打灰 430 萬噸</strong></td>
+            <td>同步導致蘇打灰原料缺貨，影響所有玻璃廠商</td>
+          </tr>
+          <tr>
+            <td>國際銷售佔比</td>
+            <td><strong style="color:var(--accent);">59% 國際銷售</strong></td>
+            <td>歐洲、中東、非洲市場供給同步缺失</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="grid-3">
+        <div class="kpi-card">
+          <div class="kpi-label">年停擺玻璃包裝產能</div>
+          <div class="kpi-value">120萬噸</div>
+          <div class="kpi-sub">土耳其境內全線停擺</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">蘇打灰供應缺口</div>
+          <div class="kpi-value">430萬噸</div>
+          <div class="kpi-sub">影響全球原料供應</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">歐洲供應鏈影響</div>
+          <div class="kpi-value">#1</div>
+          <div class="kpi-sub">歐洲最大單一供應節點消失</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 6: CUSTOMER DIALOGUE ══ -->
+  <div class="slide" id="slide-6">
+    <div class="section-tag">1.4 業務對話升級</div>
+    <h2 class="header">如何跟客戶談這場危機</h2>
+    <div class="scroll-content">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:22%;">客戶問題</th>
+            <th style="width:35%;">❌ 不應該說</th>
+            <th style="width:43%;">✅ 應該說</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>「你們受荷莫茲危機影響嗎？」</strong></td>
+            <td style="color:#e74c3c;">「我們完全沒事，不受影響。」<br><span style="font-size:12px; color:var(--muted);">(不可信)</span></td>
+            <td style="color:#2ecc71;">「台灣的 LNG 主要來自澳洲和美國，不通過荷莫茲。我們的能源成本受到的影響遠低於歐洲競爭者，目前產能穩定。」</td>
+          </tr>
+          <tr>
+            <td><strong>「現在交期還能保證嗎？」</strong></td>
+            <td style="color:#e74c3c;">「沒問題，一切照舊。」<br><span style="font-size:12px; color:var(--muted);">(過度承諾)</span></td>
+            <td style="color:#2ecc71;">「我們供應鏈目前正常運作，已提前鎖定三個月原料庫存。交期可能延長 1–2 週，我們會提前通知。」</td>
+          </tr>
+          <tr>
+            <td><strong>「你們的報價會漲嗎？」</strong></td>
+            <td style="color:#e74c3c;">「現在不漲，但不保證以後。」<br><span style="font-size:12px; color:var(--muted);">(信號混亂)</span></td>
+            <td style="color:#2ecc71;">「由於全球蘇打灰和能源成本上漲，本次報價已反映 8–12% 的成本增幅，有效期 7 天。我們願意協助您盡快鎖定訂單。」</td>
+          </tr>
+          <tr>
+            <td><strong>「Şişecam 停了，你有額外產能嗎？」</strong></td>
+            <td style="color:#e74c3c;">「我們沒有多餘產能。」<br><span style="font-size:12px; color:var(--muted);">(放棄機會)</span></td>
+            <td style="color:#2ecc71;">「我們目前評估有一定的額外產能可提供。請讓我在 48 小時內給您一份詳細的產能確認報告和樣品計劃。」</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 7: MARKET COMPARISON ══ -->
+  <div class="slide" id="slide-7">
+    <div class="section-tag section-tag blue">二、市場進軍策略</div>
+    <h2 class="header">美歐市場比較：危機情境下的機會分析</h2>
+    <div style="margin-bottom:14px; font-size:15px; color:var(--muted);">
+      核心原則：危機期間，<strong style="color:var(--accent2);">「歐洲優先」</strong>。歐洲供應缺口最大、採購商最急迫、議價空間最有利。
+    </div>
+    <div class="scroll-content">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:20%;">面向</th>
+            <th style="width:40%;">🇺🇸 美國市場</th>
+            <th style="width:40%;" style="background:rgba(26,122,74,0.3);">🇪🇺 歐洲市場 <span class="badge yellow">優先！</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>危機下市場變化</strong></td>
+            <td>美國本土供應商受能源成本壓力，進口需求提升；但美國氣價漲幅(+7%)遠低於歐洲</td>
+            <td style="background:rgba(26,122,74,0.08);">土耳其停供 + 歐洲能源危機 = <strong style="color:var(--accent2);">嚴重供應缺口</strong>，採購商恐慌性尋找替代供應商</td>
+          </tr>
+          <tr>
+            <td><strong>時間窗口</strong></td>
+            <td>中期機會（3–6 個月）</td>
+            <td style="background:rgba(26,122,74,0.08);"><strong style="color:#2ecc71;">立即性機會（0–4 週）</strong>，部分歐洲採購商已主動詢問亞洲供應商</td>
+          </tr>
+          <tr>
+            <td><strong>切入點</strong></td>
+            <td>鎖定受影響的食品 &amp; 飲料品牌商，以穩定交貨能力為核心訴求</td>
+            <td style="background:rgba(26,122,74,0.08);">直接切入德、法、義三國玻璃容器採購商，強調：有產能、能源來源穩定、有歐洲據點</td>
+          </tr>
+          <tr>
+            <td><strong>定價策略</strong></td>
+            <td>可小幅上調報價（能源成本轉嫁），市場對漲價接受度較平時高</td>
+            <td style="background:rgba(26,122,74,0.08);"><strong style="color:var(--accent2);">供應缺口下，漲價接受度極高</strong>。但切忌漫天開價，影響長期關係</td>
+          </tr>
+          <tr>
+            <td><strong>認證要求</strong></td>
+            <td>FDA 食品接觸合規（多數台灣廠商已具備）</td>
+            <td style="background:rgba(26,122,74,0.08);">EU PCR 認證仍需取得，但危機期間歐洲採購商可能提供「豁免期」</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 8: EUROPE STRATEGY ══ -->
+  <div class="slide" id="slide-8">
+    <div class="section-tag section-tag green">2.2 歐洲市場策略</div>
+    <h2 class="header">立即切入的三個突破口</h2>
+    <div class="scroll-content">
+      <div class="card" style="margin-bottom:16px; background:linear-gradient(135deg,rgba(26,64,128,0.4),rgba(26,122,74,0.2)); border-color:var(--lightblue);">
+        <div style="font-size:13px; color:var(--accent2); font-weight:700; margin-bottom:6px;">突破口① ｜ 填補 Şişecam 停供後的直接缺口</div>
+        <ul class="dot-list">
+          <li><strong>目標客戶：</strong>德、法、義三國的食品、飲料、藥品玻璃容器採購商，特別是原本與 Şişecam 有合作關係者</li>
+          <li><strong>行動：</strong>本週內，請歐洲據點聯繫 <span class="badge yellow">5–10 家</span> 已知的 Şişecam 客戶，主動詢問其替代供應商需求</li>
+          <li>差異化訴求：①台灣能源來源穩定（不依賴荷莫茲）②有現有歐洲據點 ③交貨時間確定性高</li>
+        </ul>
+      </div>
+      <div class="card" style="margin-bottom:16px; background:linear-gradient(135deg,rgba(232,184,75,0.15),rgba(26,64,128,0.3)); border-color:var(--accent2);">
+        <div style="font-size:13px; color:var(--accent2); font-weight:700; margin-bottom:6px;">突破口② ｜ 以「穩定性溢價」取代「低價競爭」</div>
+        <ul class="dot-list">
+          <li>危機期間，歐洲採購商最需要的不是最低價，而是<strong>「確定能交貨的供應商」</strong></li>
+          <li>建議報價策略：在標準報價基礎上增加 <span class="badge yellow">8–12%</span> 的「能源穩定附加費」，並提供鎖定 3–6 個月報價的長期合約選項</li>
+          <li>強調：簽訂長期合約可為客戶提供供應確定性，對方在危機中更有採購動力</li>
+        </ul>
+      </div>
+      <div class="card" style="background:linear-gradient(135deg,rgba(26,122,74,0.2),rgba(26,64,128,0.3)); border-color:#2ecc71;">
+        <div style="font-size:13px; color:#2ecc71; font-weight:700; margin-bottom:6px;">突破口③ ｜ ESG 合規準備（中期護城河）</div>
+        <ul class="dot-list">
+          <li>EU PCR 認證雖非立即性要求，但危機期間若取得認證，可在危機後期鞏固客戶關係</li>
+          <li>建議：申請程序立即啟動，不因危機而暫緩。告知客戶「危機中我們仍在推進合規」是強烈的品牌信號</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 9: US STRATEGY ══ -->
+  <div class="slide" id="slide-9">
+    <div class="section-tag section-tag blue">2.3 美國市場策略</div>
+    <h2 class="header">以「不受荷莫茲影響的亞洲供應鏈」定位切入</h2>
+    <div class="scroll-content">
+      <div class="card" style="margin-bottom:20px; font-size:15px; line-height:1.7;">
+        美國市場能源衝擊相對小（本土頁岩氣），但採購商同樣在評估供應鏈多元化：
+      </div>
+      <div class="grid-2" style="margin-bottom:16px;">
+        <div class="card blue-accent">
+          <div style="font-size:13px; color:var(--accent2); font-weight:700; margin-bottom:10px;">🍺 精釀啤酒 &amp; 有機食品品牌商</div>
+          <ul class="dot-list">
+            <li>對供應鏈穩定性敏感度高</li>
+            <li>正在尋找「不受地緣政治衝突影響的亞洲替代供應商」</li>
+          </ul>
+        </div>
+        <div class="card blue-accent">
+          <div style="font-size:13px; color:var(--accent2); font-weight:700; margin-bottom:10px;">🏭 美國玻璃廠產能缺口</div>
+          <ul class="dot-list">
+            <li>Ardagh、O-I 受能源成本上升影響</li>
+            <li>部分產品線可能出現供應收縮</li>
+            <li>留下切入空間</li>
+          </ul>
+        </div>
+      </div>
+      <div class="card yellow-accent" style="margin-bottom:16px;">
+        <div style="font-size:13px; color:var(--accent2); font-weight:700; margin-bottom:10px;">🎯 核心訴求</div>
+        <div class="flow" style="gap:12px;">
+          <div class="flow-item" style="flex:1;">台灣地理位置<br>遠離中東衝突</div>
+          <div class="flow-arrow">+</div>
+          <div class="flow-item" style="flex:1;">太平洋航線暢通<br>能源成本穩定</div>
+          <div class="flow-arrow">+</div>
+          <div class="flow-item" style="flex:1;">交貨確定性高<br>供應鏈可預期</div>
+        </div>
+      </div>
+      <div class="card green-accent">
+        <div style="font-size:13px; color:#2ecc71; font-weight:700; margin-bottom:8px;">📋 切入策略</div>
+        <div style="font-size:14px; line-height:1.7;">
+          先透過代理商或進口商建立聯繫，以<strong>樣品訂單驗證後</strong>，再推進長期合約
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 10: ACTION PLAN ══ -->
+  <div class="slide" id="slide-10">
+    <div class="section-tag">三、行動清單</div>
+    <h2 class="header">華夏目前該做什麼？不該做什麼？</h2>
+    <div class="scroll-content">
+      <div class="do-dont">
+        <div class="do-box">
+          <div class="box-header">✅ 現在必須做（危機窗口期）</div>
+          <ul class="dot-list">
+            <li>立即啟動歐洲緊急客戶開發計畫：指派專人在 1 週內聯繫現有歐洲據點，蒐集 5 家以上有意切換供應商的採購商</li>
+            <li>準備「危機供應能力說明書」（1 頁）：說明華夏的能源來源、產能餘裕、交貨時間</li>
+            <li>立即盤點蘇打灰庫存，並在 2 週內鎖定 3 個月以上的蘇打灰採購合約</li>
+            <li>調整報價策略：合理反映能源成本漲幅（建議 +8–15%），同步縮短報價有效期至 7 天</li>
+            <li>主動向現有海外據點發出緊急指令，確認歐洲 &amp; 美洲據點已動員</li>
+            <li>啟動 ESG/PCR 認證申請（勿因危機中斷）</li>
+          </ul>
+        </div>
+        <div class="dont-box">
+          <div class="box-header">❌ 現在絕對不該做</div>
+          <ul class="dot-list">
+            <li>不要用過去的報價邏輯報價。供應缺口下，低報只是讓利，損失長期利潤</li>
+            <li>不要承諾超出實際產能的訂單量，危機期間違約比不接單的傷害更大</li>
+            <li>不要只盯著歐洲，忽略現有客戶的訂單穩定性。老客戶先穩住，新客戶才有意義</li>
+            <li>不要對客戶宣稱「台灣完全不受影響」，過度承諾只會拉高日後期望</li>
+            <li>不要在荷莫茲情勢未明之際，做出需要 12 個月以上才能回收的大型資本支出決策</li>
+            <li>不要忽略供應鏈的二階風險：確認瓶蓋、密封膠圈等配件供應商是否也受影響</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 11: WARNINGS ══ -->
+  <div class="slide" id="slide-11">
+    <div class="section-tag">3.1 特別警示</div>
+    <h2 class="header">兩個看似合理但實際危險的行為</h2>
+    <div class="scroll-content">
+      <div class="card" style="background:rgba(200,41,42,0.12); border:1px solid var(--accent); margin-bottom:24px; padding:28px;">
+        <div style="font-size:13px; color:var(--accent); font-weight:700; margin-bottom:16px;">⚠ 危險行為 ① ｜ 以超低價搶佔市場份額</div>
+        <div class="grid-2" style="gap:20px; align-items:start;">
+          <div>
+            <div style="font-size:12px; color:var(--muted); margin-bottom:6px;">表面理由</div>
+            <div style="font-size:14px; line-height:1.7; font-style:italic; color:#d0b0b0;">「現在是搶市場最好的時機，先用低價搶進，再慢慢提價」</div>
+          </div>
+          <div>
+            <div style="font-size:12px; color:var(--accent2); margin-bottom:6px; font-weight:700;">真正的風險</div>
+            <ul class="dot-list" style="font-size:13px;">
+              <li>危機後 Şişecam 若恢復供應，客戶立刻要求你也降回去</li>
+              <li>低價訂單若產能不足，違約損失更大</li>
+              <li>破壞整個台灣玻璃業在歐洲的定價形象</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="card" style="background:rgba(200,41,42,0.12); border:1px solid var(--accent); padding:28px;">
+        <div style="font-size:13px; color:var(--accent); font-weight:700; margin-bottom:16px;">⚠ 危險行為 ② ｜ 急著在歐洲建廠或買廠</div>
+        <div class="grid-2" style="gap:20px; align-items:start;">
+          <div>
+            <div style="font-size:12px; color:var(--muted); margin-bottom:6px;">表面理由</div>
+            <div style="font-size:14px; line-height:1.7; font-style:italic; color:#d0b0b0;">「Şişecam 停了，我們要快速在當地建立生產基地搶先機」</div>
+          </div>
+          <div>
+            <div style="font-size:12px; color:var(--accent2); margin-bottom:6px; font-weight:700;">真正的風險</div>
+            <ul class="dot-list" style="font-size:13px;">
+              <li>危機窗口可能 6–18 個月後關閉（Şişecam 可能復產），高額投資無法回收</li>
+              <li>地緣政治局勢不明時承擔大額資本支出，財務風險極高</li>
+              <li>應以訂單先行，基地評估分開進行</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 12: STRATEGY ══ -->
+  <div class="slide" id="slide-12">
+    <div class="section-tag section-tag yellow">四、綜合策略主張</div>
+    <h2 class="header">華夏玻璃｜2026 危機應對核心策略主張</h2>
+    <div class="scroll-content">
+      <div class="quote-box" style="margin-bottom:32px;">
+        「以台灣能源優勢為盾，以歐洲供應缺口為矛，<br>
+        在 Şişecam 停供的窗口期內，以<strong style="color:var(--accent2);">穩定性溢價</strong>搶佔歐洲高端玻璃容器市場，<br>
+        同步奠定長期 ESG 合規基礎，使危機客戶轉化為長期夥伴。」
+      </div>
+      <div class="grid-3">
+        <div class="pillar">
+          <div class="pillar-num">01</div>
+          <div class="pillar-title">能源優勢宣傳化</div>
+          <div class="pillar-body">將台灣不依賴荷莫茲的能源結構，轉化為對客戶的明確承諾與差異化訴求，讓「穩定交貨」成為核心品牌主張</div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-num">02</div>
+          <div class="pillar-title">供應缺口快速切入</div>
+          <div class="pillar-body">本週啟動歐洲緊急客戶開發，鎖定 Şişecam 原有客戶群，以快速樣品確認 + 靈活交期搶佔缺口</div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-num">03</div>
+          <div class="pillar-title">危機客戶長期化</div>
+          <div class="pillar-body">透過 ESG 認證、長期合約設計、BCP 文件，將危機中建立的客戶關係轉化為 Şişecam 復產後仍無法取代的長期夥伴</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 13: ROADMAP ══ -->
+  <div class="slide" id="slide-13">
+    <div class="section-tag section-tag blue">4.2 執行路線圖</div>
+    <h2 class="header">6 個月可執行路線圖（危機急迫版）</h2>
+    <div class="scroll-content">
+      <div style="display:grid; grid-template-columns: 110px 1fr 130px 150px; gap:10px; margin-bottom:8px; font-size:12px; color:var(--muted); font-weight:600; padding: 0 4px;">
+        <div>時間軸</div><div>關鍵行動</div><div>負責單位</div><div>成功指標</div>
+      </div>
+      <div style="display:grid; grid-template-columns: 110px 1fr 130px 150px; gap:10px; margin-bottom:10px; padding:14px 12px; background:rgba(200,41,42,0.12); border:1px solid rgba(200,41,42,0.3); border-radius:6px; align-items:start;">
+        <div style="font-size:13px; font-weight:700; color:var(--accent);">Week 1<br><span style="font-size:11px; font-weight:400; color:var(--muted);">（本週）</span></div>
+        <div style="font-size:13px; line-height:1.8; color:#c0d8f0;">1. 召開危機應對會議，成立跨部門小組<br>2. 盤點歐美現有客戶訂單影響<br>3. 盤點蘇打灰庫存，啟動緊急採購詢價<br>4. 發出「華夏供應能力說明書」給歐洲據點</div>
+        <div style="font-size:12px; color:var(--muted); line-height:1.8;">CEO + 業務總監<br>採購部門<br>國際業務部</div>
+        <div style="font-size:12px; color:#2ecc71; line-height:1.8;">小組成立<br>庫存報告<br>說明書發出</div>
+      </div>
+      <div style="display:grid; grid-template-columns: 110px 1fr 130px 150px; gap:10px; margin-bottom:10px; padding:14px 12px; background:rgba(232,184,75,0.1); border:1px solid rgba(232,184,75,0.3); border-radius:6px; align-items:start;">
+        <div style="font-size:13px; font-weight:700; color:var(--accent2);">Week 2–4<br><span style="font-size:11px; font-weight:400; color:var(--muted);">（本月）</span></div>
+        <div style="font-size:13px; line-height:1.8; color:#c0d8f0;">1. 接觸歐洲前 10 大目標採購商（聚焦德/法/義）<br>2. 完成蘇打灰 3 個月鎖價合約<br>3. 更新對外報價結構（含能源加成）<br>4. 確認所有海外據點進入「主動業務模式」</div>
+        <div style="font-size:12px; color:var(--muted); line-height:1.8;">歐洲業務團隊<br>採購部門<br>財務 + 業務<br>海外據點主管</div>
+        <div style="font-size:12px; color:#2ecc71; line-height:1.8;">接觸名單10家<br>蘇打灰合約<br>新報價結構<br>據點確認</div>
+      </div>
+      <div style="display:grid; grid-template-columns: 110px 1fr 130px 150px; gap:10px; margin-bottom:10px; padding:14px 12px; background:rgba(26,64,128,0.3); border:1px solid rgba(45,106,176,0.4); border-radius:6px; align-items:start;">
+        <div style="font-size:13px; font-weight:700; color:var(--lightblue);">Month 2–3<br><span style="font-size:11px; font-weight:400; color:var(--muted);">（短期）</span></div>
+        <div style="font-size:13px; line-height:1.8; color:#c0d8f0;">1. 取得歐洲至少 2–3 家新客戶 MOU 或 LOI<br>2. 對美國市場接觸 5 家精釀/有機食品客戶<br>3. 開始申請 EU PCR 認證<br>4. 啟動台灣能源備援盤點</div>
+        <div style="font-size:12px; color:var(--muted); line-height:1.8;">歐洲業務<br>美洲業務<br>品保部門<br>營運長</div>
+        <div style="font-size:12px; color:#2ecc71; line-height:1.8;">歐洲MOU x2<br>美洲接觸 x5<br>認證申請遞件<br>備援方案</div>
+      </div>
+      <div style="display:grid; grid-template-columns: 110px 1fr 130px 150px; gap:10px; padding:14px 12px; background:rgba(26,122,74,0.15); border:1px solid rgba(46,204,113,0.3); border-radius:6px; align-items:start;">
+        <div style="font-size:13px; font-weight:700; color:#2ecc71;">Month 3–6<br><span style="font-size:11px; font-weight:400; color:var(--muted);">（中期）</span></div>
+        <div style="font-size:13px; line-height:1.8; color:#c0d8f0;">1. 歐洲市場：完成首批量產訂單，目標年增 +10% 營收<br>2. 評估是否在東南亞（越南/泰國）設立備援產能<br>3. 美洲市場：取得 2 個以上品牌商正式訂單<br>4. 發布首份危機應對 ESG 報告</div>
+        <div style="font-size:12px; color:var(--muted); line-height:1.8;">業務團隊<br>策略規劃<br>美洲業務<br>永續長/行銷</div>
+        <div style="font-size:12px; color:#2ecc71; line-height:1.8;">歐洲訂單成交<br>可行性報告<br>美洲量產訂單<br>ESG報告發布</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 14: KPI ══ -->
+  <div class="slide" id="slide-14">
+    <div class="section-tag section-tag yellow">4.3 成效衡量</div>
+    <h2 class="header">KPI 指標總覽</h2>
+    <div class="scroll-content">
+      <table style="margin-bottom:24px;">
+        <thead>
+          <tr>
+            <th>類別</th>
+            <th>指標</th>
+            <th>目標（6個月）</th>
+            <th>目標（12個月）</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="badge blue">市場開拓</span></td>
+            <td>新接觸歐洲採購商數量</td>
+            <td style="color:var(--accent2); font-weight:700;">≥ 10 家</td>
+            <td style="color:var(--accent2); font-weight:700;">≥ 20 家，其中 5 家成交</td>
+          </tr>
+          <tr>
+            <td><span class="badge blue">市場開拓</span></td>
+            <td>歐洲新客戶訂單金額增幅</td>
+            <td style="color:var(--accent2); font-weight:700;">+10% 年化</td>
+            <td style="color:var(--accent2); font-weight:700;">+20% 年化</td>
+          </tr>
+          <tr>
+            <td><span class="badge yellow">成本管理</span></td>
+            <td>蘇打灰庫存備貨天數</td>
+            <td style="color:var(--accent2); font-weight:700;">90 天備庫</td>
+            <td style="color:var(--accent2); font-weight:700;">滾動 90 天維持</td>
+          </tr>
+          <tr>
+            <td><span class="badge yellow">成本管理</span></td>
+            <td>報價有效期縮短至（天）</td>
+            <td style="color:var(--accent2); font-weight:700;">7 天</td>
+            <td style="color:var(--muted);">視市場回歸至 14 天</td>
+          </tr>
+          <tr>
+            <td><span class="badge green">合規認證</span></td>
+            <td>EU PCR 認證申請進度</td>
+            <td style="color:var(--accent2); font-weight:700;">申請遞件完成</td>
+            <td style="color:#2ecc71; font-weight:700;">認證取得</td>
+          </tr>
+          <tr>
+            <td><span class="badge red">風險管理</span></td>
+            <td>BCP 文件完成度</td>
+            <td style="color:var(--accent2); font-weight:700;">Level 1/2/3 完成</td>
+            <td style="color:var(--muted);">每季更新</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="card" style="background:rgba(200,41,42,0.1); border-color:var(--accent); text-align:center; padding:20px;">
+        <div style="font-size:12px; color:var(--muted); margin-bottom:8px;">本文件備注</div>
+        <div style="font-size:14px; line-height:1.7; color:#c0d8f0;">
+          本文件於 <strong>2026 年 3 月 16 日</strong>根據最新情勢資訊整理，<strong>機密文件僅供內部使用</strong>。<br>
+          情勢持續演變，建議每週更新評估。
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /slides-wrapper -->
+
+<!-- ── NAVIGATION BAR ── -->
+<div class="nav-bar">
+  <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)" disabled>◀ 上一頁</button>
+  <span class="slide-counter" id="counter">1 / 14</span>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:7.14%;"></div></div>
+  <div class="slide-dots" id="dots"></div>
+  <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">下一頁 ▶</button>
+</div>
+
+<script>
+  const TOTAL = 14;
+  let current = 1;
+
+  // Build dots
+  const dotsEl = document.getElementById('dots');
+  for (let i = 1; i <= TOTAL; i++) {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === 1 ? ' active' : '');
+    d.setAttribute('data-n', i);
+    d.onclick = () => goTo(i);
+    d.title = 'Slide ' + i;
+    dotsEl.appendChild(d);
+  }
+
+  function goTo(n) {
+    document.getElementById('slide-' + current).classList.remove('active');
+    document.querySelectorAll('.dot')[current - 1].classList.remove('active');
+    current = n;
+    document.getElementById('slide-' + current).classList.add('active');
+    document.querySelectorAll('.dot')[current - 1].classList.add('active');
+    document.getElementById('counter').textContent = current + ' / ' + TOTAL;
+    document.getElementById('progressFill').style.width = ((current / TOTAL) * 100).toFixed(2) + '%';
+    document.getElementById('prevBtn').disabled = current === 1;
+    document.getElementById('nextBtn').disabled = current === TOTAL;
+  }
+
+  function changeSlide(dir) {
+    const next = current + dir;
+    if (next >= 1 && next <= TOTAL) goTo(next);
+  }
+
+  // Keyboard navigation
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === 'PageDown') changeSlide(1);
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp' || e.key === 'PageUp') changeSlide(-1);
+  });
+</script>
+
+</body>
+</html>
