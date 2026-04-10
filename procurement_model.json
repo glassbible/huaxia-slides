@@ -1,0 +1,106 @@
+{
+  "model_name": "華夏玻璃紙器採購流程自動化模型",
+  "version": "1.0",
+  "created": "2026-04-10",
+  "description": "華夏玻璃股份有限公司 — 紙器採購標準流程資料模型（請購單 → 採購單公司版 → 採購單供應商版）",
+
+  "company": {
+    "name": "華夏玻璃股份有限公司",
+    "tel": "(03)538-5185",
+    "fax": "(03)538-9326",
+    "iso_code": "ISO-193-02"
+  },
+
+  "supplier": {
+    "code": "10903",
+    "name": "華鴻紙業股份有限公司",
+    "payment_terms": "月結85天,25日到期",
+    "payment_method": "票據"
+  },
+
+  "purchase_request": {
+    "doc_title": "請購單",
+    "date": "2026/04/08",
+    "no": "0100025750-10",
+    "pr_no_short": "100025750",
+    "dept": "業務部",
+    "type": "NB 一般請購單",
+    "requestor": "Nick",
+    "items": [
+      {
+        "line": "10",
+        "material_no": "AA-F28103-24",
+        "name": "200ML厚底圓形透明酒瓶-紙箱",
+        "spec": "395*265*185MM",
+        "qty": 530,
+        "unit": "只",
+        "need_date": "2026/04/08",
+        "stock": 0
+      },
+      {
+        "line": "20",
+        "material_no": "AC-F28103-24",
+        "name": "200ML厚底圓形透明酒瓶-內格",
+        "spec": "389*176MM*3+259*176MM*5",
+        "qty": 530,
+        "unit": "只",
+        "need_date": "2026/04/08",
+        "stock": 0
+      }
+    ],
+    "remarks": "F28103 生產 1.2 萬支",
+    "signatories": ["請購人","單位主管","部門主管","業務主管","副執行長","執行長","常董","董事長"]
+  },
+
+  "purchase_order": {
+    "doc_title": "紙器採購單",
+    "po_type": "ZNB1",
+    "buyer": "陳姿吟",
+    "po_date": "2026/04/08",
+    "po_no": "4200016498",
+    "product_no": "F-F28103-24",
+    "product_name": "200ml厚底圓形透明酒瓶24支",
+    "currency": "TWD",
+    "packing": "紙箱24支1內格",
+    "items": [
+      {
+        "line": "10",
+        "material_no": "AA-F28103-24",
+        "name": "200ML厚底圓形透明酒瓶-紙箱",
+        "spec": "395*265*185MM",
+        "material": "5N4",
+        "sqft": 0.61,
+        "qty": 625,
+        "unit_price": 11.03,
+        "price_unit": "只",
+        "subtotal": 6894,
+        "delivery_date": "2026/04/16",
+        "notes": ""
+      },
+      {
+        "line": "20",
+        "material_no": "AC-F28103-24",
+        "name": "200ML厚底圓形透明酒瓶-內格",
+        "spec": "389*176MM*3+259*176MM*5",
+        "material": "1+1",
+        "sqft": 0.43,
+        "qty": 625,
+        "unit_price": 9.62,
+        "price_unit": "只",
+        "subtotal": 6013,
+        "delivery_date": "2026/04/16",
+        "notes": ""
+      }
+    ],
+    "subtotal_pretax": 12907,
+    "additional_fees": 0,
+    "discount": 0,
+    "subtotal_after_discount": 12907,
+    "tax_rate": 0.05,
+    "tax": 645,
+    "total_with_tax": 13552,
+    "notes": "請購1.2W",
+    "signatories_internal": ["承辦人","一級主管","單位主管","副執行長","執行長","常董","董事長"],
+    "signatories_supplier": ["承辦人","供應商確認"]
+  }
+}
