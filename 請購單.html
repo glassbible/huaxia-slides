@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<title>請購單 - 華夏玻璃</title>
+<style>
+  @page { size: A4; margin: 12mm 14mm; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: "Microsoft JhengHei","微軟正黑體","PMingLiU",sans-serif;
+         font-size: 9pt; color:#000; background:#fff; }
+  .page { width:100%; max-width:183mm; margin:0 auto; }
+  .company-title { text-align:center; font-size:17pt; font-weight:bold;
+                   letter-spacing:4px; padding:4mm 0 2mm; }
+  .doc-title     { text-align:center; font-size:13pt; font-weight:bold;
+                   letter-spacing:8px; padding-bottom:3mm; }
+  hr.heavy { border:none; border-top:1.5px solid #000; margin-bottom:3mm; }
+  .info-grid { display:grid; grid-template-columns:1fr 1fr 1fr; margin-bottom:3mm; }
+  .info-grid .cell { padding:1.5mm 2mm; font-size:8.5pt; }
+  table { width:100%; border-collapse:collapse; font-size:8.5pt; }
+  th { background:#e0e0e0; text-align:center; padding:2mm 1.5mm;
+       border:0.5px solid #444; font-weight:bold; white-space:nowrap; }
+  td { border:0.5px solid #444; padding:2mm 1.5mm; text-align:center;
+       height:10mm; vertical-align:middle; }
+  td.left { text-align:left; }
+  .remark-section { margin-top:3mm; }
+  .remark-label { font-size:8.5pt; margin-bottom:1mm; }
+  .remark-box { border:0.5px solid #444; min-height:14mm; padding:2mm; font-size:9pt; }
+  .sig-table { width:100%; border-collapse:collapse; margin-top:4mm; }
+  .sig-table th { background:#ebebeb; text-align:center; border:0.5px solid #444;
+                  padding:1.5mm; font-size:8pt; font-weight:bold; }
+  .sig-table td { border:0.5px solid #444; height:12mm; }
+  .footer { margin-top:5mm; font-size:7pt; color:#555;
+            display:flex; justify-content:space-between; }
+  .iso { font-size:7pt; color:#555; margin-top:2mm; }
+  #loading { text-align:center; padding:20mm; font-size:12pt; color:#888; }
+  @media print {
+    body { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+    #loading { display:none; }
+  }
+</style>
+</head>
+<body>
+<div id="loading">⏳ 載入採購資料中…</div>
+<div id="page" class="page" style="display:none"></div>
+
+<script>
+const MODEL_URL = "https://raw.githubusercontent.com/glassbible/huaxia-slides/main/procurement_model.json";
+
+function render(M) {
+  const co = M.company, pr = M.purchase_request;
+  const rows = Array.from({length: 6}, (_, i) => {
+    const it = pr.items[i];
+    if (!it) return `<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>`;
+    return `<tr>
+      <td>${it.line}</td>
+      <td class="left">${it.material_no}</td>
+      <td class="left">${it.name}</td>
+      <td style="font-size:7.5pt">${it.spec.replace(/\+/g,'<br>+')}</td>
+      <td>${it.qty}</td>
+      <td>${it.unit||''}</td>
+      <td>${it.need_date}</td>
+      <td>${it.stock}</td>
+    </tr>`;
+  }).join('');
+
+  const sigs = pr.signatories.map(s => `<th>${s}</th>`).join('');
+  const sigCells = pr.signatories.map(() => '<td></td>').join('');
+
+  document.getElementById('page').innerHTML = `
+    <div class="company-title">${co.name.split('').join(' ')}</div>
+    <div class="doc-title">請　購　單</div>
+    <hr class="heavy">
+    <div class="info-grid">
+      <div class="cell"><span style="color:#333">請購日：</span>${pr.date.substring(0,4)} 年 ${pr.date.substring(5,7)} 月 ${pr.date.substring(8,10)} 日</div>
+      <div class="cell"><span style="color:#333">No.：</span>${pr.no}</div>
+      <div class="cell"><span style="color:#333">請購單位：</span>${pr.dept}</div>
+      <div class="cell"><span style="color:#333">請購類型：</span>${pr.type}</div>
+      <div class="cell"><span style="color:#333">請購人：</span>${pr.requestor}</div>
+      <div class="cell"><span style="color:#333">請購日期：</span>${pr.date}</div>
+    </div>
+    <table>
+      <thead><tr>
+        <th style="width:7%">項目</th><th style="width:16%">物料編號</th>
+        <th style="width:24%">品　　名</th><th style="width:22%">規　　格</th>
+        <th style="width:8%">數量</th><th style="width:6%">單位</th>
+        <th style="width:11%">需求日期</th><th style="width:6%">現有庫存</th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+    <div class="remark-section">
+      <div class="remark-label">備　　註</div>
+      <div class="remark-box">${pr.remarks}</div>
+    </div>
+    <div class="iso">${co.iso_code}</div>
+    <table class="sig-table">
+      <thead><tr>${sigs}</tr></thead>
+      <tbody><tr>${sigCells}</tr></tbody>
+    </table>
+    <div class="footer">
+      <span>★ 本單據由自動化系統產生，請核對後簽核</span>
+      <span style="color:#888;font-size:6.5pt">資料來源：${MODEL_URL}</span>
+      <span>請購單</span>
+    </div>`;
+  document.getElementById('loading').style.display = 'none';
+  document.getElementById('page').style.display = 'block';
+  document.title = `請購單 ${pr.no} - ${co.name}`;
+}
+
+fetch(MODEL_URL)
+  .then(r => r.json())
+  .then(render)
+  .catch(err => {
+    document.getElementById('loading').textContent = '⚠️ 無法載入資料，請確認網路連線。' + err;
+  });
+</script>
+</body>
+</html>

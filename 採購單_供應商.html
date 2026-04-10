@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<title>採購單（供應商）- 華夏玻璃</title>
+<style>
+  @page { size: A4; margin: 10mm 12mm; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: "Microsoft JhengHei","微軟正黑體","PMingLiU",sans-serif;
+         font-size:8.5pt; color:#000; background:#fff; }
+  .page { width:100%; max-width:186mm; margin:0 auto; position:relative; }
+  .top-right { position:absolute; top:0; right:0; text-align:right; font-size:8pt; line-height:1.7; }
+  .company-title { text-align:center; font-size:16pt; font-weight:bold;
+                   letter-spacing:3px; padding:4mm 0 2mm; }
+  .doc-title { text-align:center; font-size:12pt; font-weight:bold;
+               letter-spacing:6px; padding-bottom:2mm; }
+  hr.heavy { border:none; border-top:1.5px solid #000; margin-bottom:2.5mm; }
+  .supplier-badge { background:#f0f4ff; border:1px solid #3366cc; border-radius:3px;
+                    padding:1.5mm 3mm; font-size:8pt; color:#3366cc; font-weight:bold;
+                    text-align:center; margin-bottom:3mm; }
+  .info-wrap { display:grid; grid-template-columns:1fr 1fr; margin-bottom:2mm; }
+  .info-row { display:flex; align-items:baseline; padding:1mm 0; font-size:8.5pt; }
+  .info-row .lbl { min-width:22mm; color:#333; white-space:nowrap; }
+  table.detail { width:100%; border-collapse:collapse; font-size:8pt; margin-bottom:2mm; }
+  table.detail th { background:#e0e0e0; text-align:center; border:0.5px solid #444;
+                    padding:1.5mm 1mm; font-weight:bold; white-space:nowrap; }
+  table.detail td { border:0.5px solid #444; padding:1.5mm 1mm; text-align:center;
+                    height:13mm; vertical-align:middle; }
+  table.detail td.left { text-align:left; }
+  .bottom-wrap { display:flex; gap:3mm; }
+  .notes-box { flex:1; }
+  .notes-title { font-size:8pt; margin-bottom:1mm; }
+  .notes-inner { border:0.5px solid #444; min-height:28mm; padding:2mm; font-size:9pt; }
+  .totals { width:72mm; flex-shrink:0; }
+  .total-row { display:flex; border:0.5px solid #444; margin-top:-0.5px; }
+  .total-row .t-lbl { background:#ebebeb; width:38mm; padding:1.5mm 2mm;
+                      text-align:right; font-size:8pt; white-space:nowrap;
+                      border-right:0.5px solid #444; }
+  .total-row .t-val { flex:1; padding:1.5mm 2mm; text-align:right; font-size:8.5pt; }
+  .total-row.grand { font-weight:bold; }
+  .confirm-block { border:1px solid #888; border-radius:3px; padding:2mm 3mm;
+                   margin-top:3mm; font-size:7.5pt; color:#444; line-height:1.7; }
+  .sig-table { width:100%; border-collapse:collapse; margin-top:3mm; }
+  .sig-table th { background:#ebebeb; text-align:center; border:0.5px solid #444;
+                  padding:1.5mm; font-size:7.5pt; font-weight:bold; }
+  .sig-table td { border:0.5px solid #444; height:13mm; }
+  .page-no { text-align:center; font-size:7pt; color:#555; margin-top:2mm; }
+  .footer { margin-top:3mm; font-size:7pt; color:#555;
+            display:flex; justify-content:space-between; }
+  #loading { text-align:center; padding:20mm; font-size:12pt; color:#888; }
+  @media print {
+    body { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+    #loading { display:none; }
+  }
+</style>
+</head>
+<body>
+<div id="loading">⏳ 載入採購資料中…</div>
+<div id="page" class="page" style="display:none"></div>
+
+<script>
+const MODEL_URL = "https://raw.githubusercontent.com/glassbible/huaxia-slides/main/procurement_model.json";
+
+function fmt(n) { return Number(n).toLocaleString(); }
+
+function render(M) {
+  const co = M.company, sup = M.supplier, po = M.purchase_order;
+
+  const rows = Array.from({length: 6}, (_, i) => {
+    const it = po.items[i];
+    if (!it) return `<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>`;
+    return `<tr>
+      <td>${it.line}</td>
+      <td class="left">${it.material_no}</td>
+      <td class="left">${it.name}<br><span style="font-size:7pt;color:#333">${it.spec}</span></td>
+      <td>${it.material}</td><td>${it.sqft}</td>
+      <td><strong>${it.qty}</strong></td>
+      <td>${it.unit_price}/${it.price_unit}</td>
+      <td>${fmt(it.subtotal)}</td>
+      <td><strong>${it.delivery_date}</strong></td>
+      <td>${it.notes||''}</td>
+    </tr>`;
+  }).join('');
+
+  document.getElementById('page').innerHTML = `
+    <div class="top-right">電話：${co.tel}<br>傳真：${co.fax}</div>
+    <div class="company-title">${co.name.split('').join(' ')}</div>
+    <div class="doc-title">紙 器 採 購 單</div>
+    <hr class="heavy">
+    <div class="supplier-badge">📦 供應商聯　—　請依本單規格及交期備貨，並於交貨時附本單一份</div>
+    <div class="info-wrap">
+      <div class="info-col">
+        <div class="info-row"><span class="lbl">供應商：</span><span><strong>${sup.code} ${sup.name}</strong></span></div>
+        <div class="info-row"><span class="lbl">採購類型：</span><span>${po.po_type}</span></div>
+        <div class="info-row"><span class="lbl">採購人：</span><span>${po.buyer}</span></div>
+        <div class="info-row"><span class="lbl">成品編號：</span><span>${po.product_no}</span></div>
+        <div class="info-row"><span class="lbl">包裝方式：</span><span>${po.packing}</span></div>
+      </div>
+      <div class="info-col">
+        <div class="info-row"><span class="lbl">付款條件：</span><span>${sup.payment_terms}</span></div>
+        <div class="info-row"><span class="lbl">付款方式：</span><span>${sup.payment_method}</span></div>
+        <div class="info-row"><span class="lbl">採購日期：</span><span>${po.po_date}</span></div>
+        <div class="info-row"><span class="lbl">採購單號：</span><span><strong>${po.po_no}</strong></span></div>
+        <div class="info-row"><span class="lbl">品名規格：</span><span>${po.product_name}</span></div>
+        <div class="info-row"><span class="lbl">幣　　別：</span><span>${po.currency}</span></div>
+      </div>
+    </div>
+    <table class="detail">
+      <thead><tr>
+        <th style="width:6%">項次</th><th style="width:15%">物料編號</th>
+        <th style="width:27%">品名規格</th><th style="width:7%">材質</th>
+        <th style="width:6%">才數</th><th style="width:7%">數量</th>
+        <th style="width:9%">單價</th><th style="width:9%">小計</th>
+        <th style="width:10%">交貨日期</th><th style="width:4%">備註</th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+    <div class="bottom-wrap">
+      <div class="notes-box">
+        <div class="notes-title">注意事項</div>
+        <div class="notes-inner">${po.notes}</div>
+      </div>
+      <div class="totals">
+        <div class="total-row"><span class="t-lbl">未 稅 總 計：</span><span class="t-val">${fmt(po.subtotal_pretax)}</span></div>
+        <div class="total-row"><span class="t-lbl">附 加 費 用：</span><span class="t-val">${po.additional_fees}</span></div>
+        <div class="total-row"><span class="t-lbl">折　　扣：</span><span class="t-val">${po.discount}</span></div>
+        <div class="total-row"><span class="t-lbl">折扣後未稅總計：</span><span class="t-val">${fmt(po.subtotal_after_discount)}</span></div>
+        <div class="total-row"><span class="t-lbl">營 業 稅：</span><span class="t-val">${fmt(po.tax)}</span></div>
+        <div class="total-row grand"><span class="t-lbl">含 稅 總 額：</span><span class="t-val">${fmt(po.total_with_tax)}</span></div>
+      </div>
+    </div>
+    <div class="confirm-block">
+      ⚠ 收到本採購單後，請於 <strong>2 個工作天內</strong>回傳確認，並依表列交貨日期備貨送達。
+      如有疑問請聯繫採購人員：${po.buyer}　${co.tel}
+    </div>
+    <table class="sig-table">
+      <thead><tr><th style="width:50%">承 辦 人（華夏玻璃）</th><th style="width:50%">供應商確認蓋章</th></tr></thead>
+      <tbody><tr><td></td><td></td></tr></tbody>
+    </table>
+    <div class="page-no">簽核表單 1 / 1</div>
+    <div class="footer">
+      <span>★ 本單據由自動化系統產生，請核對後簽核</span>
+      <span style="color:#aaa;font-size:6pt">${MODEL_URL}</span>
+      <span>採購單（供應商）</span>
+    </div>`;
+
+  document.getElementById('loading').style.display = 'none';
+  document.getElementById('page').style.display = 'block';
+  document.title = `採購單（供應商）${po.po_no} - ${co.name}`;
+}
+
+fetch(MODEL_URL)
+  .then(r => r.json())
+  .then(render)
+  .catch(err => {
+    document.getElementById('loading').textContent = '⚠️ 無法載入資料：' + err;
+  });
+</script>
+</body>
+</html>
